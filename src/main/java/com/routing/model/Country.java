@@ -1,5 +1,7 @@
 package com.routing.model;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.List;
 
 /**
@@ -10,6 +12,7 @@ public record Country(
         List<String> borders
 ) {
     public Country {
+        Validate.notNull(cca3, "cca3 should not be null");
         borders = borders == null ? List.of() : List.copyOf(borders);
     }
 }

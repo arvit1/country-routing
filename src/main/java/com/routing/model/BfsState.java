@@ -1,5 +1,7 @@
 package com.routing.model;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.List;
 
 /**
@@ -9,6 +11,7 @@ import java.util.List;
 public record BfsState(String country, List<String> path) {
 
     public BfsState {
+        Validate.notNull(country, "country should not be null");
         path = List.copyOf(path);
     }
 

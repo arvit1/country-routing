@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-class CountryGraphServiceTest {
+class CountryGraphServiceIT {
 
     @Autowired
     CountryGraphService countryGraphService;
@@ -22,19 +22,19 @@ class CountryGraphServiceTest {
     class LandRoutes {
 
         @Test
-        void czechToItaly_landRoute() {
+        void czechToItalyLandRoute() {
             var route = countryGraphService.findRoute("CZE", "ITA");
             assertThat(route).isEqualTo(List.of("CZE", "AUT", "ITA"));
         }
 
         @Test
-        void multiHopRoute_asia() {
+        void multiHopRouteAsia() {
             var route = countryGraphService.findRoute("KAZ", "KOR");
             assertThat(route).isEqualTo(List.of("KAZ", "CHN", "PRK", "KOR"));
         }
 
         @Test
-        void sameCountry_returnsSingleElement() {
+        void sameCountryReturnsSingleElement() {
             var route = countryGraphService.findRoute("FRA", "FRA");
             assertThat(route).containsExactly("FRA");
         }
@@ -44,14 +44,14 @@ class CountryGraphServiceTest {
     class IslandCases {
 
         @Test
-        void japanToKorea_noLandRoute() {
+        void japanToKoreaNoLandRoute() {
             var ex = assertThrows(NoRouteException.class,
                     () -> countryGraphService.findRoute("JPN", "KOR"));
             assertThat(ex.getMessage()).contains("No land route");
         }
 
         @Test
-        void ukToFrance_noLandRouteDespiteChannel() {
+        void ukToFranceNoLandRouteDespiteChannel() {
             var ex = assertThrows(NoRouteException.class,
                     () -> countryGraphService.findRoute("GBR", "FRA"));
             assertThat(ex.getMessage()).contains("No land route");
@@ -62,13 +62,13 @@ class CountryGraphServiceTest {
     class PeninsulaAndNarrowCases {
 
         @Test
-        void italyToSpain_viaFrance() {
+        void italyToSpainViaFrance() {
             var route = countryGraphService.findRoute("ITA", "ESP");
             assertThat(route).isEqualTo(List.of("ITA", "FRA", "ESP"));
         }
 
         @Test
-        void portugalToGermany_crossMultipleBorders() {
+        void portugalToGermanyCrossMultipleBorders() {
             var route = countryGraphService.findRoute("PRT", "DEU");
             assertThat(route).isEqualTo(List.of("PRT", "ESP", "FRA", "DEU"));
         }
@@ -78,21 +78,21 @@ class CountryGraphServiceTest {
     class EdgeConditions {
 
         @Test
-        void unknownOrigin_throws() {
+        void unknownOriginThrows() {
             var ex = assertThrows(NoRouteException.class,
                     () -> countryGraphService.findRoute("XXX", "DEU"));
             assertThat(ex.getMessage()).contains("Unknown country code");
         }
 
         @Test
-        void unknownDestination_throws() {
+        void unknownDestinationThrows() {
             var ex = assertThrows(NoRouteException.class,
                     () -> countryGraphService.findRoute("CZE", "YYY"));
             assertThat(ex.getMessage()).contains("Unknown country code");
         }
 
         @Test
-        void disconnectedTerritory_noLandRoute() {
+        void disconnectedTerritoryNoLandRoute() {
             // Example: often island/overseas territories like "GRL" (Greenland) to "CAN"
             var ex = assertThrows(NoRouteException.class,
                     () -> countryGraphService.findRoute("GRL", "CAN"));
