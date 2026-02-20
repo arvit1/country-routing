@@ -58,17 +58,14 @@ public class CountryGraphService {
     // -------------------------------------------------------------------------
 
     @PostConstruct
-    void init() throws InterruptedException {
-        // Run the blocking HTTP fetch on a virtual thread so startup is clean
-        Thread.ofVirtual().name("graph-loader").start(() -> {
-            try {
-                borderGraph = buildGraph(fetchCountries());
-                log.info("Loaded border graph with {} countries", borderGraph.size());
-            } catch (Exception e) {
-                log.error("Failed to load country data", e);
-                throw new RuntimeException(e);
-            }
-        }).join(); // block until done so the graph is ready before first request
+    void init() throws Exception {
+        try {
+            borderGraph = buildGraph(fetchCountries());
+            log.info("Loaded border graph with {} countries", borderGraph.size());
+        } catch (Exception e) {
+            log.error("Failed to load country data", e);
+            throw e;
+        }
     }
 
     // -------------------------------------------------------------------------
