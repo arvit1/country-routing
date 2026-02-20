@@ -6,10 +6,9 @@ A Spring Boot service that calculates the shortest land route between any two co
 
 | Feature | Where |
 |---|---|
-| **Records** | `Country`, `RouteResponse`, `BfsState`, `ErrorResponse` — immutable data carriers |
+| **Records** | `Country`, `RouteResponse`, `BfsState` — immutable data carriers |
 | **Virtual Threads** | HTTP client executor, Spring MVC request dispatcher, startup graph loader |
 | **Functional programming** | `Function`, `Predicate` composition in BFS; stream pipelines for graph building and JSON parsing |
-| **Pattern matching / text blocks** | `formatted()` strings, `Optional` chains |
 
 ---
 
